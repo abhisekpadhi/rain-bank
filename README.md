@@ -27,6 +27,11 @@ An offline & mobile first neo-bank for underserved population.
     - Caveats:
       - Android phone must be online all the time with IFTTT and Pushbullet running in the background
   
+## Infra 
+![Infra](docs/infra.png "Rainbow bank infra")
+- Serverless architecture, primarily depends on lambda functions for running backend workflows and sqs for message broking
+- User interfaces with SMS, offline & mobile first 
+
 ## Db schema
 - table: `userAccountIdMapping`
 ```
@@ -125,7 +130,7 @@ const op = {
 ```
 
 ## event schema
-- Message received from SQS
+- Message received from SQS (textlocal)
 ```json
 {
     "Records": [
