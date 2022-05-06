@@ -269,5 +269,5 @@ Tests checklist (manual)
 - [x] Create & update bucket
 - [x] See account balance
 - [x] See bucket balance
-- [ ] Find ATM for deposit
-- [ ] Find ATM for withdrawal
+- [x] Find ATM for deposit
+- [x] Find ATM for withdrawal
