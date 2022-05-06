@@ -1,0 +1,15 @@
+{
+  "name": "rainbow-fintech",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.1126.0",
+    "axios": "^0.27.2",
+    "node-fetch": "2.6.7",
+    "redis": "^4.1.0",
+    "twilio": "^3.76.1"
+  },
+  "devDependencies": {}
+}
