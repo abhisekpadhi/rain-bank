@@ -44,7 +44,7 @@ const handleRegisterNewAccount = async (phone, pan, name, location) => {
         })
         await addNewUserAccountIdMapping(phone, newId)
         console.log(`New account registered for phone: ${phone} account id: ${newId}`)
-        await sendSms(phone, 'SUCCESS')
+        await sendSms(phone, 'NEW ACCOUNT REGISTER SUCCESS')
     } else {
         console.log(`user account for ${phone} already exists`)
     }
@@ -89,7 +89,7 @@ const handleUpdateBalance = async (phone, op, money, note) => {
 
 const handleFindDeposit = async (whoRequested, howMuch, where) => {
     console.log(`find human to receive deposit from ${whoRequested} Rs.${howMuch} in ${where}`);
-    const humanAtmFound = await findHumanForDeposit(howMuch, where)
+    const humanAtmFound = await findHumanForDeposit(whoRequested, howMuch, where)
     let status = 'requested';
     if (humanAtmFound) {
         // send sms response to requester
@@ -116,6 +116,10 @@ const handleFindDeposit = async (whoRequested, howMuch, where) => {
 
 const handleDeposit = async (firstParty, howMuch, secondParty) => {
     console.log(`handleDeposit for ${firstParty} Rs.${howMuch} with ${secondParty}`);
+    if (firstParty === secondParty) {
+        console.log('handleDeposit error - fistParty and secondParty cannot be same');
+        return
+    }
     // optional todo: verification if requested user for deposit was same returned in find result
     // create new txn & save in db
     const isPossible = await isDebitPossible(secondParty, howMuch)
@@ -136,7 +140,7 @@ const handleDeposit = async (firstParty, howMuch, secondParty) => {
 
 const handleFindWithdraw = async (whoRequested, howMuch, where) => {
     // blast out sms to nearby people asking for floating cash
-    const humanAtmFound = await findHumanAtLocation(location)
+    const humanAtmFound = await findHumanAtLocation(whoRequested, location)
     let status = 'requested';
     if (humanAtmFound) {
         await sendSms(humanAtmFound['phone'], `${howMuch} FLOATING?`)
@@ -164,6 +168,10 @@ const handleFindWithdraw = async (whoRequested, howMuch, where) => {
 
 const handleWithdraw = async (firstParty, howMuch, secondParty) => {
     console.log(`handleWithdraw for ${firstParty} Rs.${howMuch} with ${secondParty}`);
+    if (firstParty === secondParty) {
+        console.log('handleWithdraw firstParty and secondParty cannot be same')
+        return;
+    }
     const isPossible = await isDebitPossible(firstParty, howMuch);
     if (isPossible) {
         await createTxn(
@@ -204,6 +212,10 @@ const handleYesNoType = async (responderPhone, response) => {
 
 const handlePayment = async (seller, howMuch, buyer) => {
     console.log(`handlePayment buyer: ${buyer} | seller: ${seller} | howMuch: ${howMuch}`);
+    if (seller === buyer) {
+        console.log('handlePayment seller and buyer cannot be same');
+        return;
+    }
     const possible = await isDebitPossible(buyer, howMuch);
     if (possible) {
         await createTxn(
@@ -221,6 +233,10 @@ const handlePayment = async (seller, howMuch, buyer) => {
 
 const handleTransfer = async (sender, howMuch, receiver) => {
     console.log(`handleTransfer sender: ${sender} | receiver: ${receiver} | howMuch: ${howMuch}`);
+    if (sender === receiver) {
+        console.log('handleTransfer err - sender and receiver cannot be same');
+        return;
+    }
     const possible = await isDebitPossible(sender, howMuch);
     if (possible) {
         await createTxn(
@@ -247,6 +263,10 @@ const handleSeeBalance = async (phone) => {
 
 const handleCollect = async (agent, howMuch, customer) => {
     console.log(`handleCollect for agent ${agent} customer ${customer} money ${howMuch}`)
+    if (agent  === customer) {
+        console.log('handleCollect err - agent and customer cannot be same');
+        return;
+    }
     await createTxn(
         agent,
         customer,

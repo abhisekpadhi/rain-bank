@@ -110,13 +110,14 @@ const addNewTxn = async (Item) => {
 }
 
 // searches for 1 account
-const findHumanForDeposit = async (howMuch, location) => {
+const findHumanForDeposit = async (requesterPhone, howMuch, location) => {
     const params = {
         TableName: constants.accountTable,
-        FilterExpression: "balance >= :balance AND loc = :loc",
+        FilterExpression: "balance >= :balance AND loc = :loc AND phone <> :phone",
         ExpressionAttributeValues: {
             ":balance": howMuch,
-            ":loc": location
+            ":loc": location,
+            ":phone": requesterPhone
         }
     }
     let res = await ddbDocClient.scan(params).promise()
@@ -136,12 +137,13 @@ const findHumanForDeposit = async (howMuch, location) => {
 }
 
 // searches for 1 account
-const findHumanAtLocation = async (location) => {
+const findHumanAtLocation = async (requesterPhone, location) => {
     const params = {
         TableName: constants.accountTable,
-        FilterExpression: "loc = :loc",
+        FilterExpression: "loc = :loc AND phone <> :phone",
         ExpressionAttributeValues: {
-            ":loc": location
+            ":loc": location,
+            ":phone": requesterPhone
         }
     }
     let res = await ddbDocClient.scan(params).promise()
