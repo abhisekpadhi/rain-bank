@@ -208,6 +208,16 @@ worker (process sms)
 ./deploy.sh worker
 ```
 
+worker (process sms sending tasks)
+```shell
+./deploy.sh sender
+```
+
+deploy all 3 functions:
+```shell
+./deploy.sh sink && ./deploy.sh worker && ./deploy.sh sender
+```
+
 - To build lambda layer
 
 1. create directory structure:
@@ -263,7 +273,7 @@ AWSLambdaVPCAccessExecutionRole
 ```
 ---
 
-Tests checklist (manual)
+Tests checklist 
 ---
 - [x] Register new account
 - [x] Collect cash by agent from customer
