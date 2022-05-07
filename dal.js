@@ -113,15 +113,16 @@ const addNewTxn = async (Item) => {
 const findHumanForDeposit = async (requesterPhone, howMuch, location) => {
     const params = {
         TableName: constants.accountTable,
-        FilterExpression: "balance >= :balance AND loc = :loc AND phone <> :phone",
+        FilterExpression: "balance >= :balance AND loc = :loc AND phone <> :phone AND currentActive = :currentActive",
         ExpressionAttributeValues: {
-            ":balance": howMuch,
+            ":balance": parseInt(howMuch, 10),
             ":loc": location,
-            ":phone": requesterPhone
+            ":phone": requesterPhone,
+            ":currentActive": true
         }
     }
     let res = await ddbDocClient.scan(params).promise()
-    let account;
+    let account = null;
     if (res.Items.length === 0 && res.LastEvaluatedKey && 'id' in res.LastEvaluatedKey) {
         while (res.Items.length === 0 && res.LastEvaluatedKey && 'id' in res.LastEvaluatedKey) {
             res = await ddbDocClient.scan({...params, ExclusiveStartKey: res.LastEvaluatedKey}).promise()
@@ -132,6 +133,8 @@ const findHumanForDeposit = async (requesterPhone, howMuch, location) => {
                 break
             }
         }
+    } else {
+        account = res.Items[0];
     }
     return account;
 }
@@ -140,10 +143,11 @@ const findHumanForDeposit = async (requesterPhone, howMuch, location) => {
 const findHumanAtLocation = async (requesterPhone, location) => {
     const params = {
         TableName: constants.accountTable,
-        FilterExpression: "loc = :loc AND phone <> :phone",
+        FilterExpression: "loc = :loc AND phone <> :phone AND currentActive = :currentActive",
         ExpressionAttributeValues: {
             ":loc": location,
-            ":phone": requesterPhone
+            ":phone": requesterPhone,
+            ":currentActive": true
         }
     }
     let res = await ddbDocClient.scan(params).promise()
@@ -158,6 +162,8 @@ const findHumanAtLocation = async (requesterPhone, location) => {
                 break
             }
         }
+    } else {
+        account = res.Items[0];
     }
     return account;
 }

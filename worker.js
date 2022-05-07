@@ -98,6 +98,8 @@ const handleFindDeposit = async (whoRequested, howMuch, where) => {
             `${humanAtmFound.name} ${humanAtmFound.phone}`
         );
         status = 'fulfilled';
+    } else {
+        await sendSms(whoRequested, "NO RESULT")
     }
     // save the request
     await writeToDb(constants.requestTable, {
@@ -106,7 +108,7 @@ const handleFindDeposit = async (whoRequested, howMuch, where) => {
         'requestType': constants.requestType.findDeposit,
         'where': where,
         'money': howMuch,
-        'otherAccount': humanAtmFound.phone,
+        'otherAccount': humanAtmFound ? humanAtmFound.phone : '',
         'status': status,
         'extraInfo': '',
         'currentActive': true,
