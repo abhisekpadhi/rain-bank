@@ -1,4 +1,4 @@
-# rainbow-fintech
+# 🌈 Rainbow bank
 An offline & mobile first neo-bank for underserved population.
 
 ## Tech
