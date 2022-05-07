@@ -18,8 +18,8 @@ An offline & mobile first neo-bank for underserved population.
       - [twilio](https://twilio.com)
       - [gupshup](https://enterprise.smsgupshup.com)
   - `Inexpensive`, `easy`, `very small scale` (used in this project):
-    - Android phone connected to internet, is installed with 2 specific apps, [IFTTT](https://ifttt.com/android_device) & [Pushbullet](https://www.pushbullet.com/)
-    - Users send sms to this phone, an ifttt recipe triggers on incoming sms containing a keyword
+    - Android phone connected to internet, is installed with [IFTTT](https://ifttt.com/android_device) & [Pushbullet](https://www.pushbullet.com/)
+    - Users send sms to this phone, an ifttt recipe triggers on incoming sms containing a keyword `RAIN`
     - Trigger reads sms content and POST's to Webhook which is hosted in AWS
     - Webhook processes the sms content & calls pushbullet api to send sms via same android phone
     - Inexpensive, since only sms sending charge as per carrier tariff
