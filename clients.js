@@ -18,7 +18,15 @@ AWS.config.logger = console;
 const sqs = new AWS.SQS();
 const ddbDocClient = new AWS.DynamoDB.DocumentClient();
 const cache = createClient({url: process.env.REDIS_ENDPOINT});
-cache.connect().then(_ => { console.log(`cache connected`)});
+try {
+    if (!process.env.DONT_CONNECT_REDIS) {
+        cache.connect().then(_ => { console.log(`cache connected`)});
+    } else {
+        console.log('didnt connect to cache')
+    }
+} catch (e) {
+    console.log(`failed to connect redis, err: ${e}`);
+}
 const QueueUrl = process.env.QUEUE_URL;
 const SmsSendQUrl = process.env.SMS_SEND_Q_URL;
 
